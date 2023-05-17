@@ -5,6 +5,14 @@ import logging
 # Diretório base onde os arquivos serão armazenados
 base_dir = "server_files"
 
+# Função para listar o conteúdo de um diretório
+
+
+def listar_diretorio(diretorio):
+    path = os.path.join(base_dir, diretorio)
+    conteudo = os.listdir(path)
+    return "Conteúdo do diretório {}: {}".format(diretorio, conteudo)
+
 # Função para criar um diretório
 
 
@@ -21,30 +29,30 @@ def remover_diretorio(diretorio):
     os.rmdir(path)
     return "Diretório removido com sucesso: {}".format(diretorio)
 
-# Função para listar o conteúdo de um diretório
+
+# Função para criar um arquivo
+def criar_arquivo(path):
+    arquivo = os.path.join(base_dir, path)
+    with open(arquivo, 'w') as file:
+        pass  # Não é necessário escrever conteúdo no arquivo neste exemplo
+    return "Arquivo criado com sucesso: {}".format(path)
+
+# Função para mover um arquivo
 
 
-def listar_diretorio(diretorio):
-    path = os.path.join(base_dir, diretorio)
-    conteudo = os.listdir(path)
-    return "Conteúdo do diretório {}: {}".format(diretorio, conteudo)
-
-# Função para enviar um arquivo
-
-
-def enviar_arquivo(nome_arquivo, diretorio_destino):
-    arquivo_origem = os.path.join(base_dir, nome_arquivo)
-    arquivo_destino = os.path.join(base_dir, diretorio_destino, nome_arquivo)
+def mover_arquivo(path_origem, path_destino):
+    arquivo_origem = os.path.join(base_dir, path_origem)
+    arquivo_destino = os.path.join(base_dir, path_destino)
     os.rename(arquivo_origem, arquivo_destino)
-    return "Arquivo enviado com sucesso para o diretório {}: {}".format(diretorio_destino, nome_arquivo)
+    return "Arquivo enviado com sucesso para o diretório {}: {}".format(path_destino, path_origem)
 
 # Função para remover um arquivo
 
 
-def remover_arquivo(nome_arquivo, diretorio):
-    arquivo = os.path.join(base_dir, diretorio, nome_arquivo)
+def remover_arquivo(path_arquivo):
+    arquivo = os.path.join(base_dir, path_arquivo)
     os.remove(arquivo)
-    return "Arquivo removido com sucesso: {}".format(nome_arquivo)
+    return "Arquivo removido com sucesso: {}".format(path_arquivo)
 
 # Função principal do servidor
 
@@ -84,9 +92,13 @@ def server():
                 resposta = remover_diretorio(argumento)
             elif comando == "listar_diretorio":
                 resposta = listar_diretorio(argumento)
-            elif comando == "enviar_arquivo":
+            elif comando == "criar_arquivo":
+                resposta = criar_arquivo(argumento)
+            elif comando == "mover_arquivo":
                 nome_arquivo, diretorio_destino = argumento.split(" ", 1)
-                resposta = enviar_arquivo(nome_arquivo, diretorio_destino)
+                resposta = mover_arquivo(nome_arquivo, diretorio_destino)
+            elif comando == "remover_arquivo":
+                resposta = remover_arquivo(argumento)
         except:
             resposta = "Erro ao executar o comando, provavelmente o diretório é invalido..."
             logging.exception(resposta)

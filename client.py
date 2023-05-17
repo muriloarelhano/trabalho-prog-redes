@@ -36,9 +36,10 @@ def client():
         print("1. Criar diretório")
         print("2. Remover diretório")
         print("3. Listar conteúdo de diretório")
-        print("4. Enviar arquivo")
-        print("5. Remover arquivo")
-        print("6. Sair")
+        print("4. Criar arquivo")
+        print("5. Mover arquivo")
+        print("6. Remover arquivo")
+        print("7. Sair")
 
         # Lê a opção escolhida pelo usuário
         opcao = input("Escolha uma opção (1-6): ")
@@ -56,18 +57,21 @@ def client():
             mensagem = "listar_diretorio {}".format(diretorio)
             enviar_mensagem(mensagem)
         elif opcao == "4":
-            nome_arquivo = input("Digite o nome do arquivo a ser enviado: ")
-            diretorio_destino = input(
-                "Digite o nome do diretório de destino: ")
-            mensagem = "enviar_arquivo {} {}".format(
-                nome_arquivo, diretorio_destino)
+            path = input("Digite o caminho do arquivo a ser criado: ")
+            mensagem = "criar_arquivo {}".format(path)
             enviar_mensagem(mensagem)
         elif opcao == "5":
-            nome_arquivo = input("Digite o nome do arquivo a ser removido: ")
-            diretorio = input("Digite o nome do diretório do arquivo: ")
-            mensagem = "remover_arquivo {} {}".format(nome_arquivo, diretorio)
+            path_arquivo = input("Digite o nome do arquivo a ser movido: ")
+            diretorio_destino = input(
+                "Digite o nome do diretório de destino: ")
+            mensagem = "mover_arquivo {} {}".format(
+                path_arquivo, diretorio_destino)
             enviar_mensagem(mensagem)
         elif opcao == "6":
+            path_arquivo = input("Digite o nome do arquivo a ser removido: ")
+            mensagem = "remover_arquivo {}".format(path_arquivo)
+            enviar_mensagem(mensagem)
+        elif opcao == "7":
             break
         else:
             print("Opção inválida")
