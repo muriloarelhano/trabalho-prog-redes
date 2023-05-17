@@ -54,6 +54,15 @@ def remover_arquivo(path_arquivo):
     os.remove(arquivo)
     return "Arquivo removido com sucesso: {}".format(path_arquivo)
 
+# Função para enviar um arquivo a partir da raiz do terminal
+
+
+def enviar_arquivo_raiz(nome_arquivo, diretorio_destino):
+    arquivo_origem = os.path.join(os.getcwd(), nome_arquivo)
+    arquivo_destino = os.path.join(base_dir, diretorio_destino, nome_arquivo)
+    os.rename(arquivo_origem, arquivo_destino)
+    return "Arquivo enviado com sucesso para o diretório {}: {}".format(diretorio_destino, nome_arquivo)
+
 # Função principal do servidor
 
 
@@ -88,17 +97,27 @@ def server():
             # Executa o comando solicitado pelo cliente
             if comando == "criar_diretorio":
                 resposta = criar_diretorio(argumento)
+
             elif comando == "remover_diretorio":
                 resposta = remover_diretorio(argumento)
+
             elif comando == "listar_diretorio":
                 resposta = listar_diretorio(argumento)
+
             elif comando == "criar_arquivo":
                 resposta = criar_arquivo(argumento)
+
             elif comando == "mover_arquivo":
+                origem, destino = argumento.split(" ", 1)
+                resposta = mover_arquivo(origem, destino)
+
+            elif comando == "enviar_arquivo_raiz":
                 nome_arquivo, diretorio_destino = argumento.split(" ", 1)
-                resposta = mover_arquivo(nome_arquivo, diretorio_destino)
+                resposta = enviar_arquivo_raiz(nome_arquivo, diretorio_destino)
+
             elif comando == "remover_arquivo":
                 resposta = remover_arquivo(argumento)
+
         except:
             resposta = "Erro ao executar o comando, provavelmente o diretório é invalido..."
             logging.exception(resposta)
