@@ -5,21 +5,23 @@ import os
 server_host = "127.0.0.1"
 server_port = 12345
 
+
 def enviar_arquivo(nome_arquivo, diretorio_destino):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Caminho completo do arquivo
     arquivo = os.path.join(os.getcwd(), nome_arquivo)
 
-    # Tamanho do arquivo
-    tamanho_arquivo = os.path.getsize(arquivo)
-
     # Conecta ao servidor
     client_socket.connect((server_host, server_port))
 
+    # Tamanho do arquivo
+    tamanho_arquivo = os.path.getsize(arquivo)
+
     # Envia o comando e o nome do arquivo
     mensagem = "enviar_arquivo {} {} {}".format(
-        nome_arquivo, tamanho_arquivo, diretorio_destino)
+        nome_arquivo, diretorio_destino, tamanho_arquivo)
+    
     client_socket.send(mensagem.encode())
 
     # Lê o conteúdo do arquivo e envia em blocos

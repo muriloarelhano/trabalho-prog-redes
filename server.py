@@ -42,8 +42,14 @@ def criar_arquivo(path):
 
 def mover_arquivo(path_origem, path_destino):
     arquivo_origem = os.path.join(base_dir, path_origem)
-    arquivo_destino = os.path.join(base_dir, path_destino)
+
+    file_name, file_extension = os.path.splitext(os.path.basename(path_origem))
+
+    arquivo_destino = os.path.join(
+        base_dir, path_destino, file_name+file_extension)
+
     os.rename(arquivo_origem, arquivo_destino)
+
     return "Arquivo enviado com sucesso para o diretório {}: {}".format(path_destino, path_origem)
 
 # Função para remover um arquivo
@@ -57,7 +63,7 @@ def remover_arquivo(path_arquivo):
 # Função para enviar um arquivo a partir da raiz do terminal
 
 
-def receber_arquivo(nome_arquivo, tamanho_arquivo, diretorio_destino, client_socket):
+def receber_arquivo(nome_arquivo, diretorio_destino, tamanho_arquivo, client_socket):
     # Caminho completo do arquivo
     arquivo = os.path.join(base_dir, diretorio_destino, nome_arquivo)
 
@@ -127,12 +133,17 @@ def server():
                 resposta = mover_arquivo(origem, destino)
 
             elif comando == "enviar_arquivo":
-                nome_arquivo, tamanho_arquivo, diretorio_destino = argumento.split(
-                    " ")
-                tamanho_arquivo = int(tamanho_arquivo)
-                resposta = receber_arquivo(
-                    nome_arquivo, tamanho_arquivo,  diretorio_destino, client_socket)
+                print(argumento.split(" "))
 
+                nome_arquivo, diretorio_destino, tamanho_arquivo,  = argumento.split(
+                    " ")
+
+                tamanho_arquivo = int(tamanho_arquivo)
+
+                resposta = receber_arquivo(
+                    nome_arquivo, diretorio_destino, tamanho_arquivo, client_socket)
+
+                print("Recebendo o arquivo...")
             elif comando == "remover_arquivo":
                 resposta = remover_arquivo(argumento)
 
