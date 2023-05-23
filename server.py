@@ -57,11 +57,26 @@ def remover_arquivo(path_arquivo):
 # Função para enviar um arquivo a partir da raiz do terminal
 
 
-def enviar_arquivo_raiz(nome_arquivo, diretorio_destino):
-    arquivo_origem = os.path.join(os.getcwd(), nome_arquivo)
-    arquivo_destino = os.path.join(base_dir, diretorio_destino, nome_arquivo)
-    os.rename(arquivo_origem, arquivo_destino)
-    return "Arquivo enviado com sucesso para o diretório {}: {}".format(diretorio_destino, nome_arquivo)
+def receber_arquivo(nome_arquivo, tamanho_arquivo, diretorio_destino, client_socket):
+    # Caminho completo do arquivo
+    arquivo = os.path.join(base_dir, diretorio_destino, nome_arquivo)
+
+    # Lê o conteúdo do arquivo em blocos
+    conteudo = b""
+    bytes_recebidos = 0
+
+    while bytes_recebidos < tamanho_arquivo:
+        # Define o tamanho do bloco a ser recebido (4096 bytes)
+        tamanho_bloco = min(4096, tamanho_arquivo - bytes_recebidos)
+        bloco = client_socket.recv(tamanho_bloco)
+        conteudo += bloco
+        bytes_recebidos += len(bloco)
+
+    # Salva o conteúdo do arquivo em disco
+    with open(arquivo, 'wb') as file:
+        file.write(conteudo)
+
+    return "Arquivo {} salvo com sucesso!".format(nome_arquivo)
 
 # Função principal do servidor
 
@@ -111,9 +126,12 @@ def server():
                 origem, destino = argumento.split(" ", 1)
                 resposta = mover_arquivo(origem, destino)
 
-            elif comando == "enviar_arquivo_raiz":
-                nome_arquivo, diretorio_destino = argumento.split(" ", 1)
-                resposta = enviar_arquivo_raiz(nome_arquivo, diretorio_destino)
+            elif comando == "enviar_arquivo":
+                nome_arquivo, tamanho_arquivo, diretorio_destino = argumento.split(
+                    " ")
+                tamanho_arquivo = int(tamanho_arquivo)
+                resposta = receber_arquivo(
+                    nome_arquivo, tamanho_arquivo,  diretorio_destino, client_socket)
 
             elif comando == "remover_arquivo":
                 resposta = remover_arquivo(argumento)

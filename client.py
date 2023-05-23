@@ -1,14 +1,45 @@
 import socket
+import os
+
+# Configurações do servidor
+server_host = "127.0.0.1"
+server_port = 12345
+
+def enviar_arquivo(nome_arquivo, diretorio_destino):
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Caminho completo do arquivo
+    arquivo = os.path.join(os.getcwd(), nome_arquivo)
+
+    # Tamanho do arquivo
+    tamanho_arquivo = os.path.getsize(arquivo)
+
+    # Conecta ao servidor
+    client_socket.connect((server_host, server_port))
+
+    # Envia o comando e o nome do arquivo
+    mensagem = "enviar_arquivo {} {} {}".format(
+        nome_arquivo, tamanho_arquivo, diretorio_destino)
+    client_socket.send(mensagem.encode())
+
+    # Lê o conteúdo do arquivo e envia em blocos
+    with open(arquivo, 'rb') as file:
+        for dados in iter(lambda: file.read(4096), b""):
+            client_socket.sendall(dados)
+
+    # Recebe a resposta do servidor
+    resposta = client_socket.recv(1024).decode()
+
+    # Exibe a resposta
+    print("Resposta do servidor:", resposta)
+
+    # Fecha a conexão com o servidor
+    client_socket.close()
+
 
 # Função para se conectar ao servidor e enviar uma mensagem
-
-
 def enviar_mensagem(mensagem):
-    # Configurações do servidor
-    server_host = "127.0.0.1"
-    server_port = 12345
 
-    # Cria um socket TCP/IP
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Conecta ao servidor
@@ -84,9 +115,7 @@ def client():
                 "Digite o nome do arquivo a ser enviado (diretorio atual): ")
             diretorio_destino = input(
                 "Digite o nome do diretório de destino (dentro de server_files): ")
-            mensagem = "enviar_arquivo_raiz {} {}".format(
-                nome_arquivo, diretorio_destino)
-            enviar_mensagem(mensagem)
+            enviar_arquivo(nome_arquivo, diretorio_destino)
 
         elif opcao == "8":
             break
