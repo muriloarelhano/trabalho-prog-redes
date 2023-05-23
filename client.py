@@ -108,7 +108,7 @@ def client():
             enviar_mensagem(mensagem)
 
         elif opcao == "6":
-            path_arquivo = input("Digite o nome do arquivo a ser removido: ")
+            path_arquivo = input("Digite o caminho com o nome do arquivo a ser removido: ")
             mensagem = "remover_arquivo {}".format(path_arquivo)
             enviar_mensagem(mensagem)
 
