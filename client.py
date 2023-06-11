@@ -21,7 +21,7 @@ def enviar_arquivo(nome_arquivo, diretorio_destino):
     # Envia o comando e o nome do arquivo
     mensagem = "enviar_arquivo {} {} {}".format(
         nome_arquivo, diretorio_destino, tamanho_arquivo)
-    
+
     client_socket.send(mensagem.encode())
 
     # Lê o conteúdo do arquivo e envia em blocos
@@ -94,13 +94,14 @@ def client():
             enviar_mensagem(mensagem)
 
         elif opcao == "4":
-            path = input("Digite o caminho do arquivo a ser criado: ")
+            path = input(
+                "Digite o nome do arquivo com caminho do arquivo a ser criado (ex, teste/teste.txt): ")
             mensagem = "criar_arquivo {}".format(path)
             enviar_mensagem(mensagem)
 
         elif opcao == "5":
             path_arquivo = input(
-                "Digite o nome do arquivo a ser movido (com o path): ")
+                "Digite o nome do arquivo a ser movido (com o caminho): ")
             diretorio_destino = input(
                 "Digite o nome do diretório de destino: ")
             mensagem = "mover_arquivo {} {}".format(
@@ -108,7 +109,8 @@ def client():
             enviar_mensagem(mensagem)
 
         elif opcao == "6":
-            path_arquivo = input("Digite o caminho com o nome do arquivo a ser removido: ")
+            path_arquivo = input(
+                "Digite o caminho com o nome do arquivo a ser removido: ")
             mensagem = "remover_arquivo {}".format(path_arquivo)
             enviar_mensagem(mensagem)
 
